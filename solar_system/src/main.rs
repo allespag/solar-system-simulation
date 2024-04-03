@@ -14,15 +14,33 @@ fn window_conf() -> Conf {
 async fn main() {
     let sun = simulation::Body::new(
         1988500e24f64,
-        149.57, // in million km
-        Vec3::new(0.0, 0.0, 0.0),
-        Vec3::new(0.0, 0.0, 0.0),
-        Vec3::new(0.0, 0.0, 0.0),
+        10_000., // wrong value, in km
+        Vec3::ZERO,
+        Vec3::ZERO,
         YELLOW,
     );
 
+    let mercury = simulation::Body::new(
+        0.330e24f64,
+        4_879. / 2., // in km
+        Vec3::new(57.9e6f32, 0., 0.),
+        Vec3::ZERO,
+        DARKGRAY,
+    );
+
+    let venus = simulation::Body::new(
+        4.87e24f64,
+        12_104. / 2., // in km,
+        Vec3::new(108.2e6f32, 0., 0.),
+        Vec3::ZERO,
+        WHITE,
+    );
+
+
     let mut simulation = simulation::Simulation::new();
     simulation.add_body(sun);
+    simulation.add_body(mercury);
+    simulation.add_body(venus);
 
     loop {
         clear_background(BLACK);

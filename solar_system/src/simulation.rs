@@ -4,7 +4,14 @@
 // Newtonian constant of gravitation
 const G: f64 = 6.67430e-11f64;
 
+// Astronomical unit in km
+const AU: f32 = 149.6e6;
+
+// TODO: this is a random value, fix this
+const SCALE: f32 = 1. / 300000.;
+
 use macroquad::prelude::*;
+
 pub struct Body {
     mass: f64,
     radius: f64,
@@ -20,7 +27,6 @@ impl Body {
         radius: f64,
         pos: Vec3,
         initial_velocity: Vec3,
-        current_velocity: Vec3,
         color: Color,
     ) -> Body {
         Body {
@@ -28,7 +34,7 @@ impl Body {
             radius: radius,
             pos: pos,
             initial_velocity: initial_velocity,
-            current_velocity: current_velocity,
+            current_velocity: initial_velocity,
             color: color,
         }
     }
@@ -37,11 +43,21 @@ impl Body {
         unimplemented!();
     }
 
+    pub fn update(&self) {
+        unimplemented!();
+    }
+
     pub fn draw(&self) {
+        let x = self.pos.x * SCALE + screen_width() / 2.0;
+        let y = self.pos.y * SCALE + screen_height() / 2.0;
+
+        // TODO: this is a random value, fix this
+        let r = self.radius as f32 / 100.;
+
         draw_circle(
-            self.pos.x + screen_width() / 2.0,
-            self.pos.y + screen_height() / 2.0,
-            self.radius as f32,
+            x,
+            y,
+            r,
             self.color,
         );
     }
@@ -50,7 +66,7 @@ impl Body {
 pub struct Simulation {
     bodies: Vec<Body>,
     time: i32,
-    timestep: i32,
+    timestep: i32, // in seconds
 }
 
 // TODO: learn more about "Default"
@@ -69,7 +85,7 @@ impl Simulation {
         Simulation {
             bodies: Vec::new(),
             time: 0,
-            timestep: 60 * 60,
+            timestep: 60 * 60 * 24,
         }
     }
 
@@ -82,7 +98,7 @@ impl Simulation {
     }
 
     pub fn update(&mut self) {
-        self.bodies[0].pos.x += 1.;
+
     }
 
     pub fn draw(&self) {
