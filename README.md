@@ -8,6 +8,10 @@ This project is my very first venture into Rust programming! It's a simulation o
 
 ## Controls
 
+## Resources
+
+- https://nssdc.gsfc.nasa.gov/planetary/factsheet/
+
 ## TODO
 
 - [ ] Should we separate the "drawing" part from the "calculation" part? 
