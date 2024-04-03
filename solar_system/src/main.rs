@@ -27,6 +27,9 @@ async fn main() {
     loop {
         clear_background(BLACK);
 
+        simulation.update();
+        simulation.draw();
+
         // From https://github.com/not-fl3/macroquad/issues/380
         let minimum_frame_time = 1. / 60.; // 60 FPS
         let frame_time = get_frame_time();
@@ -35,9 +38,6 @@ async fn main() {
             std::thread::sleep(std::time::Duration::from_millis(time_to_sleep as u64));
         }
         draw_text(format!("FPS: {}", get_fps()).as_str(), screen_width() - 60., 10., 16., WHITE);
-
-        simulation.update();
-        simulation.draw();
 
         next_frame().await;
     }
