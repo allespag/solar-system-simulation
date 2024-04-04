@@ -44,7 +44,7 @@ async fn main() {
     const DESIRED_FPS: f32 = 60.;
 
     loop {
-        // clear_background(BLACK);
+        clear_background(BLACK);
 
         simulation.update();
         simulation.draw();

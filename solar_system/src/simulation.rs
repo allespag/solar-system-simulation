@@ -7,15 +7,25 @@ const G: f64 = 6.67430e-11_f64;
 pub const AU: f64 = 149.6e6_f64 * 1000.;
 
 // TODO: this is a random value, fix this
-const SCALE: f64 = 250. / AU;
+const SCALE: f64 = 150. / AU;
 
-#[derive(Clone, Copy)]
+// #[derive(Copy, Clone)]
 pub struct Body {
     mass: f64,
     radius: f64,
     pos: DVec3,
     current_velocity: DVec3,
     color: Color,
+    orbit: Vec<Vec3>,
+}
+
+impl Clone for Body {
+    fn clone(&self) -> Self {
+        Body {
+            orbit: self.orbit.clone(),
+            ..Self::new(self.mass, self.radius, self.pos, self.current_velocity, self.color)
+        }
+    }
 }
 
 impl Body {
@@ -26,6 +36,7 @@ impl Body {
             pos: pos,
             current_velocity: initial_velocity,
             color: color,
+            orbit: Vec::new(),
         }
     }
 
@@ -46,18 +57,20 @@ impl Body {
         return DVec3::new(force_x, force_y, 0.);
     }
 
-    pub fn update(&mut self, sun: &Body, timestep: f64) {
-        // DO NOT WORK
-        if std::ptr::eq(self, sun) {
-            return;
+    pub fn update(&mut self, bodies: &Vec<Body>, timestep: f64) {
+        let mut total_force = DVec3::ZERO;
+        for body in bodies.iter() {
+            if std::ptr::eq(body, self) {
+                println!("proc!!");
+                continue
+            }
+            total_force += self.attraction(body);
         }
-
-        let total_force = self.attraction(sun);
         self.current_velocity += total_force / self.mass * timestep;
         self.pos += self.current_velocity * timestep;
     }
 
-    pub fn draw(&self) {
+    pub fn draw(&mut self) {
         let offset = DVec3::new(
             (screen_width() / 2.) as f64,
             (screen_height() / 2.) as f64,
@@ -67,7 +80,16 @@ impl Body {
         let y: f32 = (self.pos.y * SCALE + offset.y) as f32;
 
         // TODO: this is a random value, fix this
-        let r = self.radius as f32 / 100.;
+        let r = self.radius as f32 / 500.;
+
+        // TODO: max len in function of the distance to the sun ?
+        if self.orbit.len() > 100 {
+            self.orbit.remove(0);
+        }
+        self.orbit.push(Vec3::new(x, y, 0.));
+        for o in self.orbit.iter() {
+            draw_circle(o.x, o.y, r / 2., WHITE);
+        }
 
         draw_circle(x, y, r, self.color);
     }
@@ -108,24 +130,30 @@ impl Simulation {
     }
 
     pub fn update(&mut self) {
-        let sun = self.bodies[0];
-        for body in self.bodies.iter_mut() {
+        let old_bodies = self.bodies.to_vec();
+        for target in &mut self.bodies {//self.bodies.iter_mut() {
             // TODO: temporary, i.e, we're dealing with the sun
-            if body.color == YELLOW {
+            if target.color == YELLOW {
                 continue;
             }
 
-            body.update(&sun, self.timestep as f64);
+            let mut total_force = DVec3::ZERO;
+            for body in old_bodies.iter() {
+                // TODO: temporary, i.e, we're on the same body
+                if body.mass == target.mass {
+                    continue;
+                }
+                total_force += target.attraction(&body);
+            }
+            let time_delta = self.timestep as f64;
+            target.current_velocity += total_force / target.mass * time_delta;
+            target.pos += target.current_velocity * time_delta;
         }
         self.time += self.timestep;
     }
 
-    pub fn draw(&self) {
-        for body in self.bodies.iter() {
-            // TODO: temporary, i.e, we're dealing with the sun
-            // if body.color == YELLOW {
-            //     continue;
-            // }
+    pub fn draw(&mut self) {
+        for body in self.bodies.iter_mut() {
             body.draw();
         }
     }
