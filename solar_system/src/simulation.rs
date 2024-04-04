@@ -122,7 +122,6 @@ pub struct Simulation {
     timestep: i32, // in seconds
 }
 
-
 impl Simulation {
     pub fn new() -> Simulation {
         Simulation {
@@ -142,6 +141,7 @@ impl Simulation {
 
     pub fn update(&mut self) {
         let old_bodies = self.bodies.to_vec();
+
         for body in &mut self.bodies {
             if body.type_ == BodyType::STAR {
                 continue;
