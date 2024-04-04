@@ -15,7 +15,6 @@ pub enum BodyType {
     PLANET,
 }
 
-// #[derive(Copy, Clone)]
 pub struct Body {
     type_: BodyType,
     mass: f64,
@@ -82,8 +81,8 @@ impl Body {
     pub fn update(&mut self, bodies: &Vec<Body>, timestep: f64) {
         let mut total_force = DVec3::ZERO;
         for body in bodies.iter() {
-            if std::ptr::eq(body, self) {
-                println!("proc!!");
+            // TODO: temporary, making sure we're not on the same body
+            if self.mass == body.mass {
                 continue;
             }
             total_force += self.attraction(body);
@@ -123,16 +122,6 @@ pub struct Simulation {
     timestep: i32, // in seconds
 }
 
-// TODO: learn more about "Default"
-// impl Default for Simulation {
-//     fn default() -> Self {
-//         Self {
-//             bodies: Vec::new(),
-//             time: 0,
-//             timestep: 1,
-//         }
-//     }
-// }
 
 impl Simulation {
     pub fn new() -> Simulation {
@@ -153,24 +142,11 @@ impl Simulation {
 
     pub fn update(&mut self) {
         let old_bodies = self.bodies.to_vec();
-        for target in &mut self.bodies {
-            if target.type_ == BodyType::STAR {
+        for body in &mut self.bodies {
+            if body.type_ == BodyType::STAR {
                 continue;
             }
-
-            let mut total_force = DVec3::ZERO;
-            for body in old_bodies.iter() {
-                // TODO: temporary, i.e, we're on the same body
-                if body.mass == target.mass {
-                    continue;
-                }
-                total_force += target.attraction(&body);
-            }
-            let time_delta = self.timestep as f64;
-            target.current_velocity += total_force / target.mass * time_delta;
-            target.pos += target.current_velocity * time_delta;
-
-            // body.update(&old_bodies, self.timestep as f64);
+            body.update(&old_bodies, self.timestep as f64);
         }
         self.time += self.timestep;
     }
