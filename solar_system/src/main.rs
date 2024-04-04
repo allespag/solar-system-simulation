@@ -26,22 +26,22 @@ async fn main() {
     let mercury = simulation::Body::new(
         0.330e24_f64,
         4_879. / 2., // in km
-        DVec3::new(57.9e6_f64 * 1000., 0., 0.), // should be in meters?
+        DVec3::new(57.9e6_f64 * 1000., 0., 0.),
         DVec3::new(0., -47.4 * 1000., 0.),
         DARKGRAY,
     );
     simulation.add_body(mercury);
 
-    // let venus = simulation::Body::new(
-    //     4.87e24f32,
-    //     12_104. / 2., // in km,
-    //     Vec3::new(108.2e6f32, 0., 0.),
-    //     Vec3::ZERO,
-    //     WHITE,
-    // );
-    // simulation.add_body(venus);
+    let venus = simulation::Body::new(
+        4.87e24_f64,
+        12_104. / 2., // in km,
+        DVec3::new(108.2e6_f64 * 1000., 0., 0.),
+        DVec3::new(0., -35.02 * 1000., 0.),
+        WHITE,
+    );
+    simulation.add_body(venus);
 
-    const DESIRED_FPS: f32 = 30.;
+    const DESIRED_FPS: f32 = 60.;
 
     loop {
         // clear_background(BLACK);
