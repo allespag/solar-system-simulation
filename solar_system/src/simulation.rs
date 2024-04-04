@@ -61,10 +61,6 @@ impl Body {
         }
     }
 
-    pub fn from_config() -> Body {
-        unimplemented!();
-    }
-
     pub fn attraction(&self, other: &Body) -> DVec3 {
         let distance_x = other.pos.x - self.pos.x;
         let distance_y = other.pos.y - self.pos.y;
@@ -109,7 +105,7 @@ impl Body {
         }
         self.orbit.push(Vec3::new(x, y, 0.));
         for o in self.orbit.iter() {
-            draw_circle(o.x, o.y, r / 2., WHITE);
+            draw_circle(o.x, o.y, 1., LIGHTGRAY);
         }
 
         draw_circle(x, y, r, self.color);
@@ -129,10 +125,6 @@ impl Simulation {
             time: 0,
             timestep: 24 * 60 * 60,
         }
-    }
-
-    pub fn from_config() -> Simulation {
-        unimplemented!();
     }
 
     pub fn add_body(&mut self, body: Body) {
