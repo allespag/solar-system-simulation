@@ -37,12 +37,22 @@ async fn main() {
     let venus = simulation::Body::new(
         simulation::BodyType::PLANET,
         4.87e24_f64,
-        12_104. / 2., // in km,
+        12_104. / 2., // in km
         DVec3::new(108.2e6_f64 * 1000., 0., 0.),
         DVec3::new(0., -35.02 * 1000., 0.),
         WHITE,
     );
     simulation.add_body(venus);
+
+    let earth = simulation::Body::new(
+        simulation::BodyType::PLANET,
+        5.87e24_f64,
+        12_756. / 2., // in km
+        DVec3::new(149.6e6_f64 * 1000., 0., 0.),
+        DVec3::new(0., 29.783 * 1000., 0.),
+        BLUE,
+    );
+    simulation.add_body(earth);
 
     const DESIRED_FPS: f32 = 60.;
 
