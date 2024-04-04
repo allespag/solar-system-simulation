@@ -9,8 +9,15 @@ pub const AU: f64 = 149.6e6_f64 * 1000.;
 // TODO: this is a random value, fix this
 const SCALE: f64 = 150. / AU;
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum BodyType {
+    STAR,
+    PLANET,
+}
+
 // #[derive(Copy, Clone)]
 pub struct Body {
+    type_: BodyType,
     mass: f64,
     radius: f64,
     pos: DVec3,
@@ -24,6 +31,7 @@ impl Clone for Body {
         Body {
             orbit: self.orbit.clone(),
             ..Self::new(
+                self.type_,
                 self.mass,
                 self.radius,
                 self.pos,
@@ -35,8 +43,16 @@ impl Clone for Body {
 }
 
 impl Body {
-    pub fn new(mass: f64, radius: f64, pos: DVec3, initial_velocity: DVec3, color: Color) -> Body {
+    pub fn new(
+        type_: BodyType,
+        mass: f64,
+        radius: f64,
+        pos: DVec3,
+        initial_velocity: DVec3,
+        color: Color,
+    ) -> Body {
         Body {
+            type_: type_,
             mass: mass,
             radius: radius,
             pos: pos,
@@ -138,9 +154,7 @@ impl Simulation {
     pub fn update(&mut self) {
         let old_bodies = self.bodies.to_vec();
         for target in &mut self.bodies {
-            //self.bodies.iter_mut() {
-            // TODO: temporary, i.e, we're dealing with the sun
-            if target.color == YELLOW {
+            if target.type_ == BodyType::STAR {
                 continue;
             }
 
@@ -155,6 +169,8 @@ impl Simulation {
             let time_delta = self.timestep as f64;
             target.current_velocity += total_force / target.mass * time_delta;
             target.pos += target.current_velocity * time_delta;
+
+            // body.update(&old_bodies, self.timestep as f64);
         }
         self.time += self.timestep;
     }

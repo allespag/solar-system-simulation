@@ -15,6 +15,7 @@ async fn main() {
     let mut simulation = simulation::Simulation::new();
     
     let sun = simulation::Body::new(
+        simulation::BodyType::STAR,
         1.9885e30_f64,
         10_000., // wrong value, in km
         DVec3::ZERO,
@@ -24,6 +25,7 @@ async fn main() {
     simulation.add_body(sun);
 
     let mercury = simulation::Body::new(
+        simulation::BodyType::PLANET,
         0.330e24_f64,
         4_879. / 2., // in km
         DVec3::new(57.9e6_f64 * 1000., 0., 0.),
@@ -33,6 +35,7 @@ async fn main() {
     simulation.add_body(mercury);
 
     let venus = simulation::Body::new(
+        simulation::BodyType::PLANET,
         4.87e24_f64,
         12_104. / 2., // in km,
         DVec3::new(108.2e6_f64 * 1000., 0., 0.),
