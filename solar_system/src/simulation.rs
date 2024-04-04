@@ -23,7 +23,13 @@ impl Clone for Body {
     fn clone(&self) -> Self {
         Body {
             orbit: self.orbit.clone(),
-            ..Self::new(self.mass, self.radius, self.pos, self.current_velocity, self.color)
+            ..Self::new(
+                self.mass,
+                self.radius,
+                self.pos,
+                self.current_velocity,
+                self.color,
+            )
         }
     }
 }
@@ -62,7 +68,7 @@ impl Body {
         for body in bodies.iter() {
             if std::ptr::eq(body, self) {
                 println!("proc!!");
-                continue
+                continue;
             }
             total_force += self.attraction(body);
         }
@@ -131,7 +137,8 @@ impl Simulation {
 
     pub fn update(&mut self) {
         let old_bodies = self.bodies.to_vec();
-        for target in &mut self.bodies {//self.bodies.iter_mut() {
+        for target in &mut self.bodies {
+            //self.bodies.iter_mut() {
             // TODO: temporary, i.e, we're dealing with the sun
             if target.color == YELLOW {
                 continue;
