@@ -74,6 +74,45 @@ async fn main() {
     );
     simulation.add_body(jupiter);
 
+    let saturn = simulation::Body::new(
+        simulation::BodyType::PLANET,
+        568e24_f64,
+        120_536. / 2., // in km
+        DVec3::new(1432.0e6_f64 * 1000., 0., 0.),
+        DVec3::new(0., 9.7 * 1000., 0.),
+        Color::from_hex(0xFAE5BF),
+    );
+    simulation.add_body(saturn);
+
+    let uranus = simulation::Body::new(
+        simulation::BodyType::PLANET,
+        86.8e24_f64,
+        51_118. / 2., // in km
+        DVec3::new(2867.0e6_f64 * 1000., 0., 0.),
+        DVec3::new(0., 6.8 * 1000., 0.),
+        Color::from_hex(0xACE5EE),
+    );
+    simulation.add_body(uranus);
+
+    let neptune = simulation::Body::new(
+        simulation::BodyType::PLANET,
+        102.0e24_f64,
+        49_528. / 2., // in km
+        DVec3::new(4515.0e6_f64 * 1000., 0., 0.),
+        DVec3::new(0., 5.4 * 1000., 0.),
+        Color::from_hex(0x4B70DD),
+    );
+    simulation.add_body(neptune);
+
+    let pluto = simulation::Body::new(
+        simulation::BodyType::PLANET,
+        0.0130e24_f64,
+        2_376. / 2., // in km
+        DVec3::new(5906.4e6_f64 * 1000., 0., 0.),
+        DVec3::new(0., 4.7 * 1000., 0.),
+        BEIGE,
+    );
+    simulation.add_body(pluto);
 
     const DESIRED_FPS: f32 = 60.;
 
