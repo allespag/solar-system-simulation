@@ -102,7 +102,10 @@ impl Body {
         }
         self.orbit.push(Vec3::new(x, y, 0.));
 
+        draw_ellipse_lines(x, y, 20., 50., 10., 5., RED);
+
         for dot in self.orbit.iter() {
+            // TODO: orbit needs improvement        
             draw_circle(
                 dot.x,
                 dot.y,
