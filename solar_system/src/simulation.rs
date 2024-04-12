@@ -6,8 +6,7 @@ const G: f64 = 6.67430e-11_f64;
 // Astronomical unit in meters
 pub const AU: f64 = 149.6e6_f64 * 1000.;
 
-// TODO: this is a random value, fix this
-const SCALE: f64 = 150. / AU;
+const SCALE: f64 = 300. / AU;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum BodyType {
@@ -17,10 +16,10 @@ pub enum BodyType {
 
 pub struct Body {
     type_: BodyType,
-    mass: f64,
-    radius: f64,
-    pos: DVec3,
-    current_velocity: DVec3,
+    mass: f64, // in kg
+    radius: f64, // in km
+    pos: DVec3, // in meters
+    current_velocity: DVec3, // in m/s
     color: Color,
     orbit: Vec<Vec3>,
 }
@@ -93,28 +92,27 @@ impl Body {
             (screen_height() / 2.) as f64,
             0.,
         );
-        let x: f32 = (self.pos.x * SCALE + offset.x) as f32;
-        let y: f32 = (self.pos.y * SCALE + offset.y) as f32;
-
-        // TODO: this is a random value, fix this
-        let r = self.radius as f32 / 500.;
+        let x = (self.pos.x * SCALE + offset.x) as f32;
+        let y = (self.pos.y * SCALE + offset.y) as f32;
+        let r = self.radius.log(1.6);
 
         // TODO: max len in function of the distance to the sun ?
         if self.orbit.len() > 100 {
             self.orbit.remove(0);
         }
         self.orbit.push(Vec3::new(x, y, 0.));
-        for o in self.orbit.iter() {
-            draw_circle(o.x, o.y, 1., LIGHTGRAY);
+
+        for dot in self.orbit.iter() {
+            draw_circle(dot.x, dot.y, 1., Color::new(self.color.r, self.color.g, self.color.b, 0.5));
         }
 
-        draw_circle(x, y, r, self.color);
+        draw_circle(x, y, r as f32, self.color);
     }
 }
 
 pub struct Simulation {
     bodies: Vec<Body>,
-    time: i32,
+    time: i32, // in seconds
     timestep: i32, // in seconds
 }
 
