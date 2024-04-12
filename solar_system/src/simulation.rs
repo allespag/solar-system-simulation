@@ -15,6 +15,7 @@ pub enum BodyType {
 }
 
 pub struct Body {
+    id: u64,
     type_: BodyType,
     mass: f64,               // in kg
     radius: f64,             // in km
@@ -27,6 +28,7 @@ pub struct Body {
 impl Clone for Body {
     fn clone(&self) -> Self {
         Body {
+            id: self.id,
             orbit: self.orbit.clone(),
             ..Self::new(
                 self.type_,
@@ -49,14 +51,23 @@ impl Body {
         initial_velocity: DVec3,
         color: Color,
     ) -> Body {
-        Body {
-            type_: type_,
-            mass: mass,
-            radius: radius,
-            pos: pos,
-            current_velocity: initial_velocity,
-            color: color,
-            orbit: Vec::new(),
+        // Please note that I'm uncertain about the implementation provided here.
+        static mut ID_COUNTER: u64 = 0;
+
+        unsafe {
+            let id = ID_COUNTER;
+            ID_COUNTER += 1;
+            
+            Body {
+                id: id,
+                type_: type_,
+                mass: mass,
+                radius: radius,
+                pos: pos,
+                current_velocity: initial_velocity,
+                color: color,
+                orbit: Vec::new(),
+            }
         }
     }
 
@@ -75,12 +86,11 @@ impl Body {
 
     pub fn update(&mut self, bodies: &Vec<Body>, timestep: f64) {
         let mut total_force = DVec3::ZERO;
+
         for body in bodies.iter() {
-            // TODO: temporary, making sure we're not on the same body
-            if self.mass == body.mass {
-                continue;
+            if self.id != body.id {
+                total_force += self.attraction(body);
             }
-            total_force += self.attraction(body);
         }
         self.current_velocity += total_force / self.mass * timestep;
         self.pos += self.current_velocity * timestep;
