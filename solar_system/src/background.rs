@@ -11,13 +11,13 @@ impl Star {
     }
 
     pub fn from_random() -> Star {
-        return Star {
-            pos: Vec2::new(
-                rand::gen_range(0., screen_width()),
-                rand::gen_range(0., screen_height())
-            ),
-            alpha: rand::gen_range(0., 1.)
-        };
+        let pos = Vec2::new(
+            rand::gen_range(0., screen_width()),
+            rand::gen_range(0., screen_height())
+        );
+        let alpha = rand::gen_range(0., 1.);
+
+        return Star::new(pos, alpha);
     }
 
     pub fn draw(&self) {
