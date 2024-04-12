@@ -57,7 +57,7 @@ impl Body {
         unsafe {
             let id = ID_COUNTER;
             ID_COUNTER += 1;
-            
+
             Body {
                 id: id,
                 type_: type_,
