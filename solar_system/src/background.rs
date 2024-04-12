@@ -37,7 +37,7 @@ pub struct Background {
 }
 
 impl Background {
-    pub fn new(stars_count: i8) -> Background {
+    pub fn new(stars_count: i16) -> Background {
         let mut stars = Vec::new();
         for _ in 0..stars_count {
             stars.push(Star::from_random());
