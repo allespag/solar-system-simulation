@@ -65,8 +65,11 @@ async fn main() {
     );
     simulation.add_body(mars);
 
-    // TODO: at that point, screen_width() and screen_height() won't be the right ones
-    let background = background::Background::new(100);
+    // At this stage, the functions screen_width() and screen_height() may not return accurate values
+    // Therefore, we need to update the window to ensure correct dimensions
+    next_frame().await;
+    
+    let background = background::Background::new(400);
 
     const DESIRED_FPS: f32 = 60.;
 
