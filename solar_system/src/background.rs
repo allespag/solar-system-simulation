@@ -1,17 +1,38 @@
 use macroquad::prelude::*;
 
+struct Star {
+    pos: Vec2,
+    alpha: f32,
+}
+
+impl Star {
+    pub fn new(pos: Vec2, alpha: f32) -> Star {
+        return Star {pos: pos, alpha: alpha};
+    }
+
+    pub fn from_random() -> Star {
+        return Star {
+            pos: Vec2::new(
+                rand::gen_range(0., screen_width()),
+                rand::gen_range(0., screen_height())
+            ),
+            alpha: rand::gen_range(0., 1.)
+        };
+    }
+
+    pub fn draw(&self) {
+        draw_circle(self.pos.x, self.pos.y, 1., Color::new(1., 1., 1., self.alpha));
+    }
+}
 pub struct Background {
-    stars: Vec<Vec2>,
+    stars: Vec<Star>,
 }
 
 impl Background {
     pub fn new(stars_count: i8) -> Background {
         let mut stars = Vec::new();
         for _ in 0..stars_count {
-            stars.push(Vec2::new(
-                rand::gen_range(0., screen_width()),
-                rand::gen_range(0., screen_height()),
-            ));
+            stars.push(Star::from_random());
         }
 
         return Background { stars: stars };
@@ -19,7 +40,7 @@ impl Background {
 
     pub fn draw(&self) {
         for star in &self.stars {
-            draw_circle(star.x, star.y, 1., WHITE);
+            star.draw();
         }
     }
 }
