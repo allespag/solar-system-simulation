@@ -103,7 +103,7 @@ impl Body {
         self.orbit.push(Vec3::new(x, y, 0.));
 
         for dot in self.orbit.iter() {
-            // TODO: orbit needs improvement        
+            // TODO: orbit needs improvement
             draw_circle(
                 dot.x,
                 dot.y,

@@ -7,13 +7,16 @@ struct Star {
 
 impl Star {
     pub fn new(pos: Vec2, alpha: f32) -> Star {
-        return Star {pos: pos, alpha: alpha};
+        return Star {
+            pos: pos,
+            alpha: alpha,
+        };
     }
 
     pub fn from_random() -> Star {
         let pos = Vec2::new(
             rand::gen_range(0., screen_width()),
-            rand::gen_range(0., screen_height())
+            rand::gen_range(0., screen_height()),
         );
         let alpha = rand::gen_range(0., 1.);
 
@@ -21,7 +24,12 @@ impl Star {
     }
 
     pub fn draw(&self) {
-        draw_circle(self.pos.x, self.pos.y, 1., Color::new(1., 1., 1., self.alpha));
+        draw_circle(
+            self.pos.x,
+            self.pos.y,
+            1.,
+            Color::new(1., 1., 1., self.alpha),
+        );
     }
 }
 pub struct Background {
