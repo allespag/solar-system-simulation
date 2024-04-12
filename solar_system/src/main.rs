@@ -1,6 +1,7 @@
 use macroquad::prelude::*;
 
 mod simulation;
+mod background;
 
 fn window_conf() -> Conf {
     Conf {
@@ -64,10 +65,13 @@ async fn main() {
     );
     simulation.add_body(mars);
 
+    // TODO: at that point, screen_width() and screen_height() won't be the right ones
+    let background = background::Background::new(100);
+
     const DESIRED_FPS: f32 = 60.;
 
     loop {
-        clear_background(BLACK);
+        background.draw();
 
         simulation.update();
         simulation.draw();
