@@ -16,9 +16,9 @@ pub enum BodyType {
 
 pub struct Body {
     type_: BodyType,
-    mass: f64, // in kg
-    radius: f64, // in km
-    pos: DVec3, // in meters
+    mass: f64,               // in kg
+    radius: f64,             // in km
+    pos: DVec3,              // in meters
     current_velocity: DVec3, // in m/s
     color: Color,
     orbit: Vec<Vec3>,
@@ -103,7 +103,12 @@ impl Body {
         self.orbit.push(Vec3::new(x, y, 0.));
 
         for dot in self.orbit.iter() {
-            draw_circle(dot.x, dot.y, 1., Color::new(self.color.r, self.color.g, self.color.b, 0.5));
+            draw_circle(
+                dot.x,
+                dot.y,
+                1.,
+                Color::new(self.color.r, self.color.g, self.color.b, 0.5),
+            );
         }
 
         draw_circle(x, y, r as f32, self.color);
@@ -112,7 +117,7 @@ impl Body {
 
 pub struct Simulation {
     bodies: Vec<Body>,
-    time: i32, // in seconds
+    time: i32,     // in seconds
     timestep: i32, // in seconds
 }
 
