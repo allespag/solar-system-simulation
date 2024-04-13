@@ -9,7 +9,7 @@ pub const AU: f64 = 149.6e6_f64 * 1000.;
 const SCALE: f64 = 300. / AU;
 
 pub struct Orbit {
-    total_theta: f64, // in radian ?
+    total_theta: f64,
     first_turn_made: bool,
     history: Vec<Vec3>,
     color: Color,
@@ -72,8 +72,6 @@ pub struct Body {
     pos: DVec3,              // in meters
     current_velocity: DVec3, // in m/s
     color: Color,
-    // orbit: Vec<Vec3>,
-    // first_angle: f64,       // in radian
     orbit: Orbit,
 }
 
@@ -103,8 +101,6 @@ impl Body {
         initial_velocity: DVec3,
         color: Color,
     ) -> Body {
-        let orbit = Orbit::new(&color);
-
         // Please note that I'm uncertain about the implementation provided here.
         static mut ID_COUNTER: u64 = 0;
 
@@ -120,9 +116,7 @@ impl Body {
                 pos: pos,
                 current_velocity: initial_velocity,
                 color: color,
-                orbit: orbit,
-                // orbit: Vec::new(),
-                // first_angle: f64::NAN,
+                orbit: Orbit::new(&color),
             }
         }
     }
@@ -162,47 +156,9 @@ impl Body {
         let y = (self.pos.y * SCALE + offset.y) as f32;
         let r = self.radius.log(1.6);
 
-        // POC
-        // let current_angle = f64::atan2(self.pos.y, self.pos.x);
-        // unsafe {
-        //     if self.id == 1 {
-        //         static mut TOTAL_ANGLE: f64 = 0.;
-        //         if !TOTAL_ANGLE.is_nan() {
-        //             TOTAL_ANGLE += current_angle;
-        //         }
-            
-        //         println!("1st = {} ; current = {} ; total = {}", self.first_angle, current_angle, TOTAL_ANGLE);
-        //         // if self.first_angle.is_nan() || (!TOTAL_ANGLE.is_nan() && !almost::equal_with(current_angle, self.first_angle, 0.)) {
-        //         if !TOTAL_ANGLE.is_nan() && !(TOTAL_ANGLE < 0. && TOTAL_ANGLE + current_angle > 0.) {
-        //             self.orbit.push(Vec3::new(x, y, 0.));
-        //         }
-        //         else {
-        //             println!("Not adding with id : {}", self.id);
-        //             TOTAL_ANGLE = f64::NAN;
-        //         }
-
-        //         if self.first_angle.is_nan() {
-        //             self.first_angle = current_angle;
-        //         }
-
-        //         // TODO: step_by(N) => N should be according to distance to the origin
-        //         for dot in self.orbit.iter().step_by(30) {
-        //             // TODO: orbit needs improvement
-        //             draw_circle(
-        //                 dot.x,
-        //                 dot.y,
-        //                 4.,
-        //                 Color::new(self.color.r, self.color.g, self.color.b, 0.5),
-        //             );
-        //         }
-        //     }
-        // }
-        // // END OF POC
-
         self.orbit.update(self.pos.x, self.pos.y, x, y);
         self.orbit.draw();
         
-        // Draw the actual planet
         draw_circle(x, y, r as f32, self.color);
     }
 }
