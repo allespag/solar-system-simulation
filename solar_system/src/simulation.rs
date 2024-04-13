@@ -1,9 +1,9 @@
 use macroquad::prelude::*;
 
-// Newtonian constant of gravitation
+// Newtonian constant of gravitation.
 const G: f64 = 6.67430e-11_f64;
 
-// Astronomical unit in meters
+// Astronomical unit in meters.
 pub const AU: f64 = 149.6e6_f64 * 1000.;
 
 const SCALE: f64 = 300. / AU;
@@ -17,13 +17,11 @@ pub struct Orbit {
 
 impl Orbit {
     pub fn new(color: &Color) -> Orbit {
-        let c = Color::new(color.r, color.g, color.b, 0.5);
-
         return Orbit {
             total_theta: 0.,
             first_turn_made: false,
             history: Vec::new(),
-            color: c,
+            color: Color::new(color.r, color.g, color.b, 0.5),
         };
     }
 
@@ -43,9 +41,15 @@ impl Orbit {
     }
 
     pub fn draw(&self) {
-        // TODO: step_by(N) => N should be according to distance to the origin
-        for pos in self.history.iter().step_by(50) {
-            draw_circle(pos.x, pos.y, 4., self.color);
+        if let Some(pos) = self.history.get(0) {
+            // // Calculate a somewhat arbitrary value `n`. 
+            // The intention is to avoid overloading the display.
+            let distance = f32::sqrt(pos.x.powi(2) + pos.y.powi(2));
+            let n = (distance.powi(2) / f32::exp(10.)) as usize;
+
+            for pos in self.history.iter().step_by(n as usize) {
+                draw_circle(pos.x, pos.y, 3., self.color);
+            }
         }
     }
 }
