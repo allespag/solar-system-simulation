@@ -42,7 +42,7 @@ impl Orbit {
 
     pub fn draw(&self) {
         if let Some(pos) = self.history.get(0) {
-            // // Calculate a somewhat arbitrary value `n`. 
+            // Calculate a somewhat arbitrary value `n`.
             // The intention is to avoid overloading the display.
             let distance = f32::sqrt(pos.x.powi(2) + pos.y.powi(2));
             let n = (distance.powi(2) / f32::exp(10.)) as usize;
