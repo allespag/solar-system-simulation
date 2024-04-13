@@ -8,6 +8,22 @@ pub const AU: f64 = 149.6e6_f64 * 1000.;
 
 const SCALE: f64 = 300. / AU;
 
+// pub struct Orbit {
+//     history: Vec<DVec3>
+// }
+
+// impl Orbit {
+//     pub fn new() -> Orbit {
+//         return Orbit {history: Vec::new()};
+//     }
+
+//     pub fn draw(&self) {
+//         for pos in self.history {
+//             draw_circle(pos.x, pos.y, 2., self.body.color)
+//         }
+//     }
+// }
+
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum BodyType {
     STAR,
@@ -23,6 +39,7 @@ pub struct Body {
     current_velocity: DVec3, // in m/s
     color: Color,
     orbit: Vec<Vec3>,
+    first_angle: f64,       // in radian
 }
 
 impl Clone for Body {
@@ -67,6 +84,7 @@ impl Body {
                 current_velocity: initial_velocity,
                 color: color,
                 orbit: Vec::new(),
+                first_angle: f64::NAN,
             }
         }
     }
@@ -106,21 +124,42 @@ impl Body {
         let y = (self.pos.y * SCALE + offset.y) as f32;
         let r = self.radius.log(1.6);
 
-        // TODO: max len in function of the distance to the sun ?
-        if self.orbit.len() > 100 {
-            self.orbit.remove(0);
-        }
-        self.orbit.push(Vec3::new(x, y, 0.));
+        // POC
+        let current_angle = f64::atan2(self.pos.y, self.pos.x);
+        unsafe {
+            if self.id == 1 {
+                static mut TOTAL_ANGLE: f64 = 0.;
+                if !TOTAL_ANGLE.is_nan() {
+                    TOTAL_ANGLE += current_angle;
+                }
+            
+                println!("1st = {} ; current = {} ; total = {}", self.first_angle, current_angle, TOTAL_ANGLE);
+                // if self.first_angle.is_nan() || (!TOTAL_ANGLE.is_nan() && !almost::equal_with(current_angle, self.first_angle, 0.)) {
+                if !TOTAL_ANGLE.is_nan() && !(TOTAL_ANGLE < 0. && TOTAL_ANGLE + current_angle > 0.) {
+                    self.orbit.push(Vec3::new(x, y, 0.));
+                }
+                else {
+                    println!("Not adding with id : {}", self.id);
+                    TOTAL_ANGLE = f64::NAN;
+                }
 
-        for dot in self.orbit.iter() {
-            // TODO: orbit needs improvement
-            draw_circle(
-                dot.x,
-                dot.y,
-                1.,
-                Color::new(self.color.r, self.color.g, self.color.b, 0.5),
-            );
+                if self.first_angle.is_nan() {
+                    self.first_angle = current_angle;
+                }
+
+                // TODO: step_by(N) => N should be according to distance to the origin
+                for dot in self.orbit.iter().step_by(30) {
+                    // TODO: orbit needs improvement
+                    draw_circle(
+                        dot.x,
+                        dot.y,
+                        4.,
+                        Color::new(self.color.r, self.color.g, self.color.b, 0.5),
+                    );
+                }
+            }
         }
+        // END OF POC
 
         draw_circle(x, y, r as f32, self.color);
     }
@@ -137,7 +176,7 @@ impl Simulation {
         Simulation {
             bodies: Vec::new(),
             time: 0,
-            timestep: 24 * 60 * 60,
+            timestep: 60 * 60,
         }
     }
 
