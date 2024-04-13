@@ -18,7 +18,7 @@ pub struct Orbit {
 impl Orbit {
     pub fn new(color: &Color) -> Orbit {
         let c = Color::new(color.r, color.g, color.b, 0.5);
-        
+
         return Orbit {
             total_theta: 0.,
             first_turn_made: false,
@@ -31,29 +31,21 @@ impl Orbit {
         if self.first_turn_made {
             return;
         }
-        
+
         let current_theta = f64::atan2(y, x);
 
         if !(self.total_theta < 0. && self.total_theta + current_theta > 0.) {
             self.history.push(Vec3::new(x_scaled, y_scaled, 0.));
             self.total_theta += current_theta;
-
-        }
-        else {
+        } else {
             self.first_turn_made = true;
         }
-
     }
 
     pub fn draw(&self) {
         // TODO: step_by(N) => N should be according to distance to the origin
         for pos in self.history.iter().step_by(50) {
-            draw_circle(
-                pos.x,
-                pos.y,
-                4.,
-                self.color,
-            );
+            draw_circle(pos.x, pos.y, 4., self.color);
         }
     }
 }
@@ -158,7 +150,7 @@ impl Body {
 
         self.orbit.update(self.pos.x, self.pos.y, x, y);
         self.orbit.draw();
-        
+
         draw_circle(x, y, r as f32, self.color);
     }
 }
