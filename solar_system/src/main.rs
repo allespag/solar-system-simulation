@@ -1,7 +1,7 @@
 use macroquad::prelude::*;
 
-mod simulation;
 mod background;
+mod simulation;
 
 fn window_conf() -> Conf {
     Conf {
@@ -14,7 +14,7 @@ fn window_conf() -> Conf {
 #[macroquad::main(window_conf)]
 async fn main() {
     let mut simulation = simulation::Simulation::new();
-    
+
     let sun = simulation::Body::new(
         simulation::BodyType::STAR,
         1.9885e30_f64,
@@ -68,7 +68,7 @@ async fn main() {
     // At this stage, the functions screen_width() and screen_height() may not return accurate values
     // Therefore, we need to update the window to ensure correct dimensions
     next_frame().await;
-    
+
     let background = background::Background::new(400);
 
     const DESIRED_FPS: f32 = 60.;
@@ -86,7 +86,13 @@ async fn main() {
             let time_to_sleep = (minimum_frame_time - frame_time) * 1000.;
             std::thread::sleep(std::time::Duration::from_millis(time_to_sleep as u64));
         }
-        draw_text(format!("FPS: {}", get_fps()).as_str(), screen_width() - 60., 10., 16., WHITE);
+        draw_text(
+            format!("FPS: {}", get_fps()).as_str(),
+            screen_width() - 60.,
+            10.,
+            16.,
+            WHITE,
+        );
 
         next_frame().await;
     }
