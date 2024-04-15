@@ -2,16 +2,19 @@
 
 This project is my very first venture into Rust programming! It's a simulation of the solar system using the Macrosquad framework. It aims to visualize the celestial bodies in our solar system and demonstrate their orbits and movements in a graphical interface.
 
-## Features
+I utilized information from [NASA's Planetary Fact Sheet](https://nssdc.gsfc.nasa.gov/planetary/factsheet/) to gather data on various planets in our solar system. This data serves as the foundation for the parameters and characteristics of each celestial body simulated in the project.
+
+![preview](resources/preview.gif)
 
 ## How to Run
 
-## Controls
+```shell
+cd solar_system
+cargo run
+```
 
-## Resources
-
-- https://nssdc.gsfc.nasa.gov/planetary/factsheet/
-
-## TODO
-
-- [ ] Should we separate the "drawing" part from the "calculation" part? 
+## How to test
+```shell
+cd solar_system
+cargo test
+```
